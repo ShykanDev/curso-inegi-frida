@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-inegi-fondo text-inegi-texto font-sans antialiased;
+    font-size: 16px;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: #cfe6f5;
+  }
+}
+
+@layer components {
+  .tarjeta {
+    @apply bg-white rounded-2xl border border-inegi-borde shadow-tarjeta;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition
+      focus:outline-none focus-visible:ring-4 focus-visible:ring-inegi-turquesa/30
+      disabled:opacity-50 disabled:cursor-not-allowed;
+    min-height: 48px;
+    padding: 0.65rem 1.25rem;
+  }
+
+  .btn-primario {
+    @apply btn bg-inegi-azul text-white hover:bg-inegi-oscuro active:scale-[0.99];
+  }
+
+  .btn-secundario {
+    @apply btn bg-inegi-claro text-inegi-oscuro border border-inegi-borde hover:bg-[#d9e9f5];
+  }
+
+  .btn-suave {
+    @apply btn bg-white text-inegi-azul border border-inegi-borde hover:bg-inegi-claro;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold;
+  }
+
+  .etiqueta {
+    @apply text-sm font-semibold uppercase tracking-wide text-inegi-secundario;
+  }
+
+  .enlace-menu {
+    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium text-inegi-texto
+      hover:bg-inegi-claro transition;
+  }
+
+  .enlace-menu-activo {
+    @apply bg-inegi-azul text-white hover:bg-inegi-azul;
+  }
+
+  .campo {
+    @apply w-full rounded-xl border border-inegi-borde bg-white px-3 py-2.5 text-base
+      text-inegi-texto placeholder:text-inegi-secundario/60
+      focus:outline-none focus:border-inegi-turquesa focus:ring-4 focus:ring-inegi-turquesa/20;
+  }
+
+  .bloque-texto {
+    @apply text-[17px] leading-relaxed text-inegi-texto;
+  }
+}
+
+@layer utilities {
+  .sin-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sin-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+.marca-foco:focus-visible {
+  outline: 3px solid #0099b8;
+  outline-offset: 2px;
+}

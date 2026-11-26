@@ -1,0 +1,30 @@
+{
+  "name": "curso-inegi-frida",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "probar": "vite-node pruebas.ts",
+    "probar:interfaz": "vite-node e2e.ts",
+    "probar:retos": "vite-node e2e-retos.ts"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^31.0.1",
+    "playwright": "^1.65.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.5",
+    "vite-node": "^6.0.0",
+    "vue-tsc": "^2.2.0"
+  }
+}
