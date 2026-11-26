@@ -1,5 +1,14 @@
 import type { Modulo } from './tipos'
-import { hojaEntrevistadores, hojaDuplicados, hojaCierreModulo1 } from '../lib/datos'
+import {
+  hojaEntrevistadores,
+  hojaDuplicados,
+  hojaCierreModulo1,
+  hojaFormatoCondicional,
+  hojaGraficoPractica,
+  hojaPastel,
+  hojaEstilosAvance,
+  hojaViviendas
+} from '../lib/datos'
 
 export const modulo1: Modulo = {
   id: 1,
@@ -600,6 +609,245 @@ export const modulo1: Modulo = {
         respuestaModelo: '=CONTAR.SI(A2:A12,"CDMX-101") da 2, así que el folio CDMX-101 está duplicado.',
         mensajeExito: '¡Bien! Detectaste el duplicado. Eso es limpieza de datos de verdad.',
         solucion: { E2: '=CONTAR.SI(A2:A12,"CDMX-101")' }
+      }
+    },
+    {
+      id: '1.11',
+      numero: '1.11',
+      titulo: 'Formato condicional: que Excel marque solo lo que falta',
+      bloques: [
+        'El formato condicional pinta una celda solita según el valor que tiene. Tú pones la regla una vez y ya.',
+        'Se usa así: eliges el rango, pones la condición y eliges el color. Por ejemplo: si el avance es mayor que 80, verde.',
+        'En el INEGI sirve para ver de un vistazo quién va bien y quién necesita apoyo, sin leer todos los números.',
+        'El color no cambia el dato. Solo cambia cómo se ve. El número sigue siendo el mismo.',
+        'Aquí vas a aplicar dos reglas: verde para 80 o más, y amarillo para las que están entre 60 y 79.'
+      ],
+      ejemplo: {
+        tipo: 'tabla',
+        titulo: 'Así se ve con formato condicional aplicado',
+        columnas: ['Alcaldía', 'Avance %', 'Cómo se ve'],
+        filas: [
+          ['Benito Juárez', '92', 'Verde: ya cumplió'],
+          ['Coyoacán', '85', 'Verde: ya cumplió'],
+          ['Cuauhtémoc', '78', 'Amarillo: casi llega'],
+          ['Iztapalapa', '55', 'Sin color: necesita apoyo']
+        ]
+      },
+      reto: {
+        id: '1.11-r',
+        tipo: 'excel',
+        pregunta: 'Aplica formato condicional a la columna Avance %: verde si es mayor que 80.',
+        instruccion:
+          'Pulsa “Formato condicional”, elige el rango B2:B7, la condición “es mayor que”, valor 80 y color verde. Después revisa.',
+        libro: hojaFormatoCondicional,
+        objetivos: [],
+        formatoRequerido: [
+          { rango: 'B2:B7', reglas: [{ condicion: 'mayor', valor: 80, color: 'verde' }] }
+        ],
+        pista: 'El rango es B2:B7. La condición es “es mayor que” y el valor es 80. El color, verde.',
+        respuestaModelo:
+          'Se aplica a B2:B7 la regla “es mayor que 80” en verde. Benito Juárez (92), Coyoacán (85) y Azcapotzalco (81) quedan en verde.',
+        mensajeExito: '¡Perfecto! Ahora Excel te avisa sola quién ya pasó de 80.',
+        solucion: {},
+        solucionFormato: [{ rango: 'B2:B7', reglas: [{ condicion: 'mayor', valor: 80, color: 'verde' }] }]
+      }
+    },
+    {
+      id: '1.12',
+      numero: '1.12',
+      titulo: 'Dos reglas a la vez: verde, amarillo y rojo',
+      bloques: [
+        'Puedes poner varias reglas sobre el mismo rango. Excel aplica la primera que se cumpla.',
+        'Si el avance es mayor que 80, verde. Si está entre 60 y 80, amarillo. Si es menor que 60, rojo.',
+        'Así se lee un tabulador en dos segundos: verde ya cumplió, amarillo casi, rojo necesita apoyo.',
+        'Ese semáforo es justo lo que se presenta en una reunión de avance.',
+        'Aquí vas a poner las tres reglas sobre la misma columna.'
+      ],
+      ejemplo: {
+        tipo: 'tabla',
+        titulo: 'Semáforo completo',
+        columnas: ['Avance', 'Color', 'Qué significa'],
+        filas: [
+          ['Mayor que 80', 'Verde', 'Ya cumplió la meta'],
+          ['Entre 60 y 80', 'Amarillo', 'Va a la mitad, hay que empujar'],
+          ['Menor que 60', 'Rojo', 'Necesita apoyo esta semana']
+        ]
+      },
+      reto: {
+        id: '1.12-r',
+        tipo: 'excel',
+        pregunta: 'Pon el semáforo completo en la columna Avance %.',
+        instruccion:
+          'Aplica tres reglas sobre B2:B7: mayor que 80 en verde, entre 60 y 80 en amarillo, y menor que 60 en rojo.',
+        libro: hojaEstilosAvance,
+        objetivos: [],
+        formatoRequerido: [
+          {
+            rango: 'B2:B7',
+            reglas: [
+              { condicion: 'mayor', valor: 80, color: 'verde' },
+              { condicion: 'entre', valor: 60, valor2: 80, color: 'amarillo' },
+              { condicion: 'menor', valor: 60, color: 'rojo' }
+            ]
+          }
+        ],
+        pista: 'Puedes aplicar varias reglas al mismo rango B2:B7. Una por una, sin borrar la anterior.',
+        respuestaModelo:
+          'En B2:B7 quedan tres reglas: mayor que 80 verde, entre 60 y 80 amarillo, menor que 60 rojo. Iztapalapa (55) queda en rojo.',
+        mensajeExito: '¡Muy bien! Ese semáforo es el que se lleva a una reunión de avance.',
+        solucion: {},
+        solucionFormato: [
+          {
+            rango: 'B2:B7',
+            reglas: [
+              { condicion: 'mayor', valor: 80, color: 'verde' },
+              { condicion: 'entre', valor: 60, valor2: 80, color: 'amarillo' },
+              { condicion: 'menor', valor: 60, color: 'rojo' }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: '1.13',
+      numero: '1.13',
+      titulo: 'Tu primera gráfica de barras, hecha por ti',
+      bloques: [
+        'Una gráfica de barras compara cantidades entre categorías. Aquí comparas alcaldías.',
+        'Se hace con dos cosas: un rango con las etiquetas y otro con los números. Aquí van juntos, A1:B7.',
+        'Pulsa “Insertar gráfica”, elige Barras, escribe el rango y ponle título.',
+        'Revisa que la barra más larga coincida con el número más alto de la tabla. Eso es leer tu propia gráfica.',
+        'Si algo no cuadra, no borres la tabla: cambia el rango de la gráfica.'
+      ],
+      ejemplo: {
+        tipo: 'grafico',
+        titulo: 'Completas por alcaldía (barras)',
+        estilo: 'barras',
+        etiquetas: ['Benito Juárez', 'Coyoacán', 'Cuauhtémoc', 'Iztapalapa'],
+        valores: [92, 85, 78, 55],
+        nota: 'Benito Juárez va al frente con 92; Iztapalapa está al final con 55.'
+      },
+      reto: {
+        id: '1.13-r',
+        tipo: 'excel',
+        pregunta: 'Crea tú misma la gráfica de barras de completas por alcaldía.',
+        instruccion:
+          'Pulsa “Insertar gráfica”, elige Barras, usa el rango A1:B7 y pon el título “Completas por alcaldía”.',
+        libro: hojaGraficoPractica,
+        objetivos: [],
+        graficoRequerido: { tipo: 'barras', rango: 'A1:B7', titulo: 'Completas por alcaldía' },
+        pista: 'El rango A1:B7 incluye el encabezado y las seis alcaldías. Tipo: barras.',
+        respuestaModelo:
+          'Gráfica de barras con rango A1:B7. Benito Juárez (92) queda como la barra más alta e Iztapalapa (55) como la más baja.',
+        mensajeExito: '¡Esa es tu gráfica! Ahora puedes explicar el avance con una imagen, no con una lista de números.',
+        solucion: {},
+        solucionGrafico: { tipo: 'barras', rango: 'A1:B7', titulo: 'Completas por alcaldía' }
+      }
+    },
+    {
+      id: '1.14',
+      numero: '1.14',
+      titulo: 'Gráfica de pastel: partes de un total',
+      bloques: [
+        'La gráfica de pastel muestra cómo se reparte un total. Cada rebanada es una parte.',
+        'Sirve cuando quieres ver proporciones: cuánto del total ya está completo y cuánto falta.',
+        'Se hace igual que la de barras, solo cambias el tipo a Pastel.',
+        'El pastel solo tiene sentido si las partes suman un total. Aquí son 70 completas, 18 pendientes y 12 sin respuesta.',
+        'Revisa que las tres rebanadas juntas den 100 viviendas.'
+      ],
+      ejemplo: {
+        tipo: 'grafico',
+        titulo: 'Completas, pendientes y no respuesta',
+        estilo: 'pastel',
+        etiquetas: ['Completas', 'Pendientes', 'No respuesta'],
+        valores: [70, 18, 12],
+        nota: 'Las tres partes suman 100 viviendas. Completas es la rebanada más grande.'
+      },
+      reto: {
+        id: '1.14-r',
+        tipo: 'excel',
+        pregunta: 'Crea la gráfica de pastel de completas, pendientes y no respuesta.',
+        instruccion: 'Pulsa “Insertar gráfica”, elige Pastel, usa el rango A1:B4 y titúlala “Completas vs pendientes”.',
+        libro: hojaPastel,
+        objetivos: [],
+        graficoRequerido: { tipo: 'pastel', rango: 'A1:B4', titulo: 'Completas vs pendientes' },
+        pista: 'Rango A1:B4: el encabezado y las tres categorías. Tipo: pastel.',
+        respuestaModelo:
+          'Gráfica de pastel con A1:B4. Completas 70 (la rebanada más grande), pendientes 18 y no respuesta 12.',
+        mensajeExito: '¡Bien! Con barras comparas y con pastel muestras partes de un total. Esas dos te alcanzan.',
+        solucion: {},
+        solucionGrafico: { tipo: 'pastel', rango: 'A1:B4', titulo: 'Completas vs pendientes' }
+      }
+    },
+    {
+      id: '1.15',
+      numero: '1.15',
+      titulo: 'Todo junto: fórmula, semáforo y gráfica',
+      bloques: [
+        'Este es el ejercicio que se parece a un día real: calcular, marcar y presentar.',
+        'Primero calculas el porcentaje de cobertura de cada estado.',
+        'Después pintas en verde los que ya llegaron a 80 y en rojo los que no.',
+        'Al final haces una gráfica de barras para presentarlo.',
+        'Si te trabas en una parte, pide la solución y mira exactamente cómo se hace. No pasa nada.'
+      ],
+      ejemplo: {
+        tipo: 'tabla',
+        titulo: 'Lo que vas a armar',
+        columnas: ['Paso', 'Herramienta', 'Resultado'],
+        filas: [
+          ['1. Calcular cobertura', 'Fórmula =C2/B2*100', 'Un porcentaje por estado'],
+          ['2. Marcar el avance', 'Formato condicional', 'Verde o rojo según el avance'],
+          ['3. Presentar', 'Gráfica de barras', 'Una imagen para la reunión']
+        ]
+      },
+      reto: {
+        id: '1.15-r',
+        tipo: 'excel',
+        pregunta: 'Calcula la cobertura, pinta el semáforo y arma la gráfica.',
+        instruccion:
+          'En D2 escribe =C2/B2*100 y copia hasta D4. Luego aplica a D2:D4 verde si es mayor que 80 y rojo si es menor que 60. Al final crea una gráfica de barras con el rango A1:A4 y D1:D4, que son las etiquetas y la cobertura.',
+        libro: hojaCierreModulo1,
+        objetivos: [
+          { celda: 'D2', valor: 70, tolerancia: 0.5, funciones: ['/'], etiqueta: 'CDMX' },
+          { celda: 'D3', valor: 80, tolerancia: 0.5, funciones: ['/'], etiqueta: 'Edomex' },
+          { celda: 'D4', valor: 70, tolerancia: 0.5, funciones: ['/'], etiqueta: 'Jalisco' }
+        ],
+        formatoRequerido: [
+          {
+            rango: 'D2:D4',
+            reglas: [
+              { condicion: 'mayor', valor: 80, color: 'verde' },
+              { condicion: 'menor', valor: 60, color: 'rojo' }
+            ]
+          }
+        ],
+        graficoRequerido: {
+          tipo: 'barras',
+          rango: 'A1:D4',
+          titulo: 'Cobertura por estado',
+          valoresEsperados: [70, 80, 70, 85]
+        },
+        pista:
+          'La cobertura es completas entre seleccionadas por 100. El semáforo va sobre D2:D4 y la gráfica debe mostrar la columna D, no las seleccionadas.',
+        respuestaModelo:
+          '=C2/B2*100 da 70, 80, 70 y 85. Con las reglas, los que pasan de 80 quedan en verde. La gráfica de barras compara la cobertura de los cuatro estados, no las viviendas seleccionadas.',
+        mensajeExito: '¡Lo lograste completo! Calcular, marcar y graficar es exactamente lo que vas a hacer en el INEGI.',
+        solucion: { D2: '=C2/B2*100', D3: '=C3/B3*100', D4: '=C4/B4*100', D5: '=C5/B5*100' },
+        solucionFormato: [
+          {
+            rango: 'D2:D4',
+            reglas: [
+              { condicion: 'mayor', valor: 80, color: 'verde' },
+              { condicion: 'menor', valor: 60, color: 'rojo' }
+            ]
+          }
+        ],
+        solucionGrafico: {
+          tipo: 'barras',
+          rango: 'A1:D4',
+          titulo: 'Cobertura por estado',
+          valoresEsperados: [70, 80, 70, 85]
+        }
       }
     }
   ],

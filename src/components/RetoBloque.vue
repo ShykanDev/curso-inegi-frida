@@ -21,6 +21,25 @@ const emit = defineEmits<{
 const mostrarPista = ref(false)
 const mostrarRespuesta = ref(false)
 const resueltoLocal = ref(false)
+const simuladorRef = ref<{
+  cargarSolucion: (s: Record<string, string>) => void
+  cargarSolucionCompleta: (
+    s: Record<string, string>,
+    f?: unknown,
+    g?: unknown
+  ) => void
+} | null>(null)
+
+function aplicarSolucion() {
+  mostrarRespuesta.value = true
+  if (props.reto.tipo === 'excel' && props.reto.solucion) {
+    simuladorRef.value?.cargarSolucionCompleta(
+      props.reto.solucion,
+      (props.reto.solucionFormato ?? props.reto.formatoRequerido) as never,
+      (props.reto.solucionGrafico ?? props.reto.graficoRequerido) as never
+    )
+  }
+}
 
 watch(
   () => props.reto.id,
@@ -66,8 +85,11 @@ function verRespuesta() {
 
       <SimuladorExcel
         v-if="reto.tipo === 'excel'"
+        ref="simuladorRef"
         :libro="reto.libro"
         :objetivos="reto.objetivos"
+        :formato-requerido="reto.formatoRequerido"
+        :grafico-requerido="reto.graficoRequerido"
         @validado="alValidar"
       />
       <RetoInteractivo
@@ -93,6 +115,15 @@ function verRespuesta() {
           {{ mostrarPista ? 'Ocultar pista' : 'Ver pista' }}
         </button>
         <button
+          v-if="reto.tipo === 'excel' && reto.solucion"
+          type="button"
+          class="btn-suave !min-h-[44px] text-sm"
+          @click="aplicarSolucion"
+        >
+          Ver la solución en el simulador
+        </button>
+        <button
+          v-else
           type="button"
           class="btn-suave !min-h-[44px] text-sm"
           @click="mostrarRespuesta = !mostrarRespuesta"

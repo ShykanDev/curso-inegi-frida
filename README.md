@@ -13,13 +13,30 @@ Abre la dirección que muestra la terminal (por ejemplo `http://localhost:5173`)
 
 ## Qué incluye
 
-- **Seis módulos (0 al 5)** con lecciones numeradas, ejemplo hecho, reto pequeño, pista y respuesta modelo.
+- **Seis módulos (0 al 5)** con 31 lecciones, ejemplo hecho, reto, pista y respuesta modelo.
 - **Simulador de Excel propio**, con barra de fórmulas, celdas editables y cálculo real de `SUMA`, `PROMEDIO`, `CONTAR`, `CONTAR.SI`, `SI`, `BUSCARV` y `XLOOKUP`.
-- **Retos de tabla dinámica y de gráficas** (barras y pastel) que se arman dentro de la app.
+- **Formato condicional real**: ella elige el rango, la condición y el color, y las celdas se pintan solas.
+- **Gráficas hechas por ella dentro del simulador**: barras y pastel, generadas desde un rango de la hoja.
+- **Retos de tabla dinámica** que se arman dentro de la app.
 - **Reto de validación** con una base de 10 filas que esconde 5 errores reales.
 - **Plantillas de Word y PowerPoint** para armar un oficio con tabla y una presentación de tres diapositivas.
 - **Simulación de un día completo** en el INEGI, con guion y decisiones.
+- **Botón "Ver la solución en el simulador"** en cada reto de Excel: si se atora, ve la fórmula, el formato y la gráfica ya hechos, sin perder su avance.
 - **Progreso guardado** en `localStorage` y cuatro insignias: Primera suma, Primera tabla dinámica, Validadora, Reportera INEGI.
+
+## Ruta de Excel (de cero a intermedio)
+
+| Lección | Qué aprende |
+| --- | --- |
+| 1.1 – 1.2 | Celdas, guardar, ordenar y filtrar |
+| 1.3 – 1.4 | `SUMA`, `PROMEDIO`, `CONTAR` |
+| 1.5 – 1.6 | `CONTAR.SI`, porcentajes, `SI` |
+| 1.7 | `BUSCARV` y `XLOOKUP` |
+| 1.8 | Tablas dinámicas |
+| 1.9 – 1.10 | Limpieza de datos |
+| 1.11 – 1.12 | Formato condicional: una regla y semáforo de tres colores |
+| 1.13 – 1.14 | Gráficas de barras y de pastel hechas por ella |
+| 1.15 | Todo junto: fórmula + semáforo + gráfica |
 
 ## Estructura
 

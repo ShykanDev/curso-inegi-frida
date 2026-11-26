@@ -59,6 +59,29 @@ export interface RetoClasificar extends RetoBase {
   explicacion: string
 }
 
+export type ColorFormato = 'verde' | 'rojo' | 'amarillo' | 'azul'
+
+export type CondicionFormato = 'mayor' | 'menor' | 'igual' | 'contiene' | 'entre'
+
+export interface ReglaFormato {
+  condicion: CondicionFormato
+  valor: number | string
+  valor2?: number
+  color: ColorFormato
+}
+
+export interface FormatoRequerido {
+  rango: string
+  reglas: ReglaFormato[]
+}
+
+export interface GraficoRequerido {
+  tipo: 'barras' | 'pastel'
+  rango: string
+  titulo?: string
+  valoresEsperados?: number[]
+}
+
 export interface ObjetivoExcel {
   celda: string
   valor: number | string
@@ -72,8 +95,12 @@ export interface RetoExcel extends RetoBase {
   libro: DefinicionLibro
   instruccion: string
   objetivos: ObjetivoExcel[]
+  formatoRequerido?: FormatoRequerido[]
+  graficoRequerido?: GraficoRequerido
   mensajeExito: string
   solucion?: Record<string, string>
+  solucionFormato?: FormatoRequerido[]
+  solucionGrafico?: GraficoRequerido
 }
 
 export interface RetoDinamica extends RetoBase {

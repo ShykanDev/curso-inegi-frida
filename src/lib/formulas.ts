@@ -58,7 +58,7 @@ function tokenizar(texto: string): Token[] {
       i = j
       continue
     }
-    if (/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/.test(c)) {
+    if (/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ$]/.test(c)) {
       let j = i
       let s = ''
       while (j < texto.length && /[A-Za-z0-9ÁÉÍÓÚÜÑáéíóúüñ._$]/.test(texto[j])) {
@@ -73,8 +73,11 @@ function tokenizar(texto: string): Token[] {
         }
         s = s.slice(s.indexOf('!') + 1)
       }
-      if (texto[j] === ':' && j + 1 < texto.length && /[A-Za-z$]/.test(texto[j + 1])) {
-        let k2 = j + 1
+      let kEspacio = j
+      while (kEspacio < texto.length && texto[kEspacio] === ' ') kEspacio++
+      if (texto[kEspacio] === ':') {
+        let k2 = kEspacio + 1
+        while (k2 < texto.length && texto[k2] === ' ') k2++
         let fin = ''
         while (k2 < texto.length && /[A-Za-z0-9$]/.test(texto[k2])) {
           fin += texto[k2]
@@ -182,6 +185,28 @@ function numerosDe(valores: Eval[]): number[] {
   return salida
 }
 
+function esErrorTexto(v: unknown): v is string {
+  return typeof v === 'string' && v.startsWith('#')
+}
+
+function errorDe(v: Eval): string | null {
+  if (v instanceof Rango) {
+    for (const x of v.aplanar()) {
+      if (esErrorTexto(x)) return x
+    }
+    return null
+  }
+  return esErrorTexto(v) ? v : null
+}
+
+function primerError(valores: Eval[]): string | null {
+  for (const v of valores) {
+    const e = errorDe(v)
+    if (e) return e
+  }
+  return null
+}
+
 function celdasDe(valor: Eval): Valor[] {
   if (valor instanceof Rango) return valor.aplanar()
   return [valor]
@@ -274,7 +299,9 @@ class Analizador {
     return izq
   }
 
-  private aplicarComparacion(a: Eval, op: string, b: Eval): boolean {
+  private aplicarComparacion(a: Eval, op: string, b: Eval): boolean | string {
+    const err = errorDe(a) ?? errorDe(b)
+    if (err) return err
     const ta = aTexto(a)
     const tb = aTexto(b)
     const na = Number(ta.replace(',', '.'))
@@ -305,6 +332,8 @@ class Analizador {
       const op = this.tokens[this.pos].valor
       this.pos++
       const der = this.producto()
+      const err = errorDe(izq) ?? errorDe(der)
+      if (err && op !== '&') return err
       if (op === '+') izq = aNumero(izq) + aNumero(der)
       else if (op === '-') izq = aNumero(izq) - aNumero(der)
       else izq = aTexto(izq) + aTexto(der)
@@ -318,6 +347,8 @@ class Analizador {
       const op = this.tokens[this.pos].valor
       this.pos++
       const der = this.potencia()
+      const err = errorDe(izq) ?? errorDe(der)
+      if (err) return err
       if (op === '*') {
         izq = aNumero(izq) * aNumero(der)
       } else {
@@ -334,6 +365,8 @@ class Analizador {
     while (this.esOp('^')) {
       this.pos++
       const der = this.unario()
+      const err = errorDe(izq) ?? errorDe(der)
+      if (err) return err
       izq = Math.pow(aNumero(izq), aNumero(der))
     }
     return izq
@@ -342,7 +375,10 @@ class Analizador {
   private unario(): Eval {
     if (this.esOp('-')) {
       this.pos++
-      return -aNumero(this.unario())
+      const v = this.unario()
+      const err = errorDe(v)
+      if (err) return err
+      return -aNumero(v)
     }
     if (this.esOp('+')) {
       this.pos++
@@ -416,6 +452,11 @@ class Analizador {
 
   private llamada(nombre: string): Eval {
     const args = this.argumentos()
+    const agregados = ['SUMA', 'SUM', 'PROMEDIO', 'AVERAGE', 'CONTAR', 'COUNT', 'MAX', 'MIN']
+    if (agregados.includes(nombre)) {
+      const err = primerError(args)
+      if (err) return err
+    }
     switch (nombre) {
       case 'SUMA':
       case 'SUM': {
@@ -438,12 +479,16 @@ class Analizador {
       }
       case 'CONTAR.SI':
       case 'COUNTIF': {
+        const err = errorDe(args[0] ?? '') ?? errorDe(args[1] ?? '')
+        if (err) return err
         const celdas = celdasDe(args[0] ?? '')
         const criterio = aTexto(args[1] ?? '')
         return celdas.filter((c) => coincide(c, criterio)).length
       }
       case 'SUMAR.SI':
       case 'SUMIF': {
+        const err = primerError(args.slice(0, 3))
+        if (err) return err
         const criterios = celdasDe(args[0] ?? '')
         const criterio = aTexto(args[1] ?? '')
         const sumandos = args[2] ? celdasDe(args[2]) : criterios
@@ -455,20 +500,28 @@ class Analizador {
       }
       case 'SI':
       case 'IF': {
+        const errCond = errorDe(args[0] ?? false)
+        if (errCond) return errCond
         const cond = aBooleano(args[0] ?? false)
-        if (cond) return args[1] ?? ''
-        return args[2] ?? ''
+        const rama = cond ? args[1] ?? '' : args[2] ?? ''
+        return errorDe(rama) ?? rama
       }
       case 'Y':
       case 'AND': {
+        const err = primerError(args)
+        if (err) return err
         return args.every((a) => aBooleano(a))
       }
       case 'O':
       case 'OR': {
+        const err = primerError(args)
+        if (err) return err
         return args.some((a) => aBooleano(a))
       }
       case 'BUSCARV':
       case 'VLOOKUP': {
+        const errBuscado = errorDe(args[0] ?? '')
+        if (errBuscado) return errBuscado
         const buscado = args[0] ?? ''
         const tabla = args[1]
         const col = Math.max(1, Math.round(aNumero(args[2] ?? 1)))
@@ -483,6 +536,8 @@ class Analizador {
       }
       case 'XLOOKUP':
       case 'BUSCARX': {
+        const errBuscado = errorDe(args[0] ?? '')
+        if (errBuscado) return errBuscado
         const buscado = args[0] ?? ''
         const rangoBusqueda = args[1]
         const rangoResultado = args[2]
@@ -506,6 +561,8 @@ class Analizador {
       }
       case 'REDONDEAR':
       case 'ROUND': {
+        const err = primerError(args.slice(0, 2))
+        if (err) return err
         const n = aNumero(args[0] ?? 0)
         const dec = Math.round(aNumero(args[1] ?? 0))
         const factor = Math.pow(10, dec)
@@ -568,13 +625,19 @@ export function crearHoja(celdas: Record<string, string>) {
     enProceso.add(clave)
     const crudo = (celdas[clave] ?? '').toString().trim()
     let valor: Valor = ''
+    let circular = false
     if (crudo === '') {
       valor = ''
     } else if (crudo.startsWith('=')) {
       try {
-        valor = comoEscalar(evaluarFormula(crudo, { valorDe, rangoDe }))
-        if (typeof valor === 'number' && !Number.isFinite(valor)) valor = '#¡ERROR!'
-        if (typeof valor === 'number') valor = Math.round(valor * 1e6) / 1e6
+        const resuelto = comoEscalar(evaluarFormula(crudo, { valorDe, rangoDe }))
+        if (typeof resuelto === 'string' && resuelto.startsWith('#')) {
+          valor = resuelto
+        } else if (typeof resuelto === 'number') {
+          valor = Number.isFinite(resuelto) ? Math.round(resuelto * 1e6) / 1e6 : '#¡ERROR!'
+        } else {
+          valor = resuelto
+        }
       } catch (e) {
         valor = '#¡ERROR!'
       }
@@ -583,7 +646,9 @@ export function crearHoja(celdas: Record<string, string>) {
     } else {
       valor = crudo
     }
+    if (esErrorTexto(valor) && valor === '#¡CIRCULAR!') circular = true
     enProceso.delete(clave)
+    if (circular) return valor
     cache[clave] = valor
     return valor
   }

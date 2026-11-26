@@ -261,6 +261,63 @@ export const hojaPromedioEquipo = construirLibro(
   { hoja: 'Equipo', anchos: [170, 120] }
 )
 
+export const hojaFormatoCondicional = construirLibro(
+  'formato-condicional',
+  'Avance_Alcaldías.xlsx',
+  ['Alcaldía', 'Completas', 'Meta', 'Estatus'],
+  [
+    ['Benito Juárez', 92, 80, 'Completa'],
+    ['Coyoacán', 85, 80, 'Completa'],
+    ['Cuauhtémoc', 78, 80, 'Completa'],
+    ['Iztapalapa', 55, 80, 'Pendiente'],
+    ['Azcapotzalco', 81, 80, 'Completa'],
+    ['Miguel Hidalgo', 64, 80, 'Pendiente']
+  ],
+  { hoja: 'Avance', anchos: [160, 120, 100, 130] }
+)
+
+export const hojaGraficoPractica = construirLibro(
+  'grafico-practica',
+  'Grafico_Avance.xlsx',
+  ['Alcaldía', 'Completas'],
+  [
+    ['Benito Juárez', 92],
+    ['Coyoacán', 85],
+    ['Cuauhtémoc', 78],
+    ['Iztapalapa', 55],
+    ['Azcapotzalco', 81],
+    ['Miguel Hidalgo', 64]
+  ],
+  { hoja: 'Avance', anchos: [170, 120] }
+)
+
+export const hojaPastel = construirLibro(
+  'grafico-pastel',
+  'Completas_vs_Pendientes.xlsx',
+  ['Estatus', 'Viviendas'],
+  [
+    ['Completas', 70],
+    ['Pendientes', 18],
+    ['No respuesta', 12]
+  ],
+  { hoja: 'Resumen', anchos: [160, 120] }
+)
+
+export const hojaEstilosAvance = construirLibro(
+  'estilos-avance',
+  'Seguimiento_CDMX.xlsx',
+  ['Alcaldía', 'Avance %', 'Semáforo'],
+  [
+    ['Benito Juárez', 92, ''],
+    ['Coyoacán', 85, ''],
+    ['Cuauhtémoc', 78, ''],
+    ['Iztapalapa', 55, ''],
+    ['Azcapotzalco', 81, ''],
+    ['Miguel Hidalgo', 64, '']
+  ],
+  { hoja: 'Seguimiento', anchos: [160, 120, 140] }
+)
+
 export const tablaResumenCierre = [
   { etiqueta: 'Ciudad de México', valor: 70 },
   { etiqueta: 'Estado de México', valor: 80 },
